@@ -10,8 +10,8 @@ import os
 st.set_page_config(layout="wide", page_title="Arabic RAG Interface")
 
 # --- Configuration ---
-PARAGRAPHS_FILE = "Paragraphs.txt"
-FAISS_INDEX_FILE = "faiss_index.bin"
+PARAGRAPHS_FILE = "/content/Paragraphs.txt"
+FAISS_INDEX_FILE = "/content/faiss_index.bin"
 EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 LLM_MODEL = "gemini-2.0-flash"
 TOP_N = 5
@@ -86,6 +86,8 @@ def perform_semantic_search(query, model, index, paragraphs, top_n):
         start_time = time.time()
         query_embedding = model.encode([query.strip()])
         query_embedding_np = np.array(query_embedding).astype('float32')
+        norms = np.linalg.norm(query_embedding_np, axis=1, keepdims=True)
+        query_embedding_np = query_embedding_np / norms
         if query_embedding_np.ndim == 1:
             query_embedding_np = np.expand_dims(query_embedding_np, axis=0)
         distances, indices = index.search(query_embedding_np, top_n)
