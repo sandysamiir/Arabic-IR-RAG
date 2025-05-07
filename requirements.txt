@@ -1,0 +1,9 @@
+numpy
+faiss-cpu
+scikit-learn
+streamlit
+unstructured[pdf]
+sentence-transformers
+transformers
+google-generativeai
+pytesseract
